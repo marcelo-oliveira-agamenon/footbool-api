@@ -1,12 +1,34 @@
-import { useState } from 'react';
-import countries from '../helpers/countries.json';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../../api';
+import { Countries } from '../../interfaces/api';
 
 type LoginStep = 'token' | 'country';
 
 export default function Login() {
+  const navigate = useNavigate();
   const [loginStep, setLoginStep] = useState<LoginStep>('token');
   const [tokenKey, setTokenKey] = useState('');
   const [country, setCountry] = useState('');
+  const [listOfCountries, setListOfCountries] = useState<Countries[]>([]);
+
+  const getCountriesAvaliable = useCallback(async () => {
+    await api
+      .get('/countries', {
+        headers: {
+          'x-apisports-key': tokenKey,
+        },
+      })
+      .then((response) => {
+        setListOfCountries(response.data.response);
+      });
+  }, [tokenKey]);
+
+  useEffect(() => {
+    if (loginStep === 'country') {
+      getCountriesAvaliable();
+    }
+  }, [loginStep, getCountriesAvaliable]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -14,14 +36,18 @@ export default function Login() {
     if (tokenKey && tokenKey.length !== 0) {
       // save token key on state
       setLoginStep('country');
+      localStorage.setItem('token_key', tokenKey);
       return;
     }
   };
 
-  const handleCountrySelection = () => {};
+  const handleCountrySelection = () => {
+    localStorage.setItem('country_code', country);
+    navigate('/home');
+  };
 
   return (
-    <div className="bg-orange-200 h-full flex place-content-center">
+    <div className="h-full flex place-content-center">
       {loginStep === 'token' ? (
         <div className="flex flex-col place-content-center">
           <h1>Meu time!</h1>
@@ -51,9 +77,14 @@ export default function Login() {
             id=""
             onChange={(event) => setCountry(event.target.value)}
           >
-            {countries &&
-              countries.map((country) => (
-                <option value={country.name} id={country.code}>
+            {listOfCountries &&
+              listOfCountries.map((country, index) => (
+                <option value={country.name} key={country.code + index}>
+                  <img
+                    src={`https://media.api-sports.io/flags/{${country.code}}.svg`}
+                    alt={country.name}
+                  />
+
                   {country.name}
                 </option>
               ))}

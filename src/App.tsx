@@ -3,7 +3,7 @@ import Login from './login';
 
 function App() {
   return (
-    <div>
+    <div className="w-full h-screen">
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />

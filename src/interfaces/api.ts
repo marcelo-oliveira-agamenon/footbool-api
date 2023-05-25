@@ -45,22 +45,37 @@ export interface Fixture {
 }
 
 export interface Team {
-  team: {
-    id: number;
-    name: string;
-    code: string;
+  team: TeamData;
+}
+
+export interface TeamData {
+  id: number;
+  name: string;
+  code: string;
+  country: string;
+  founded: number;
+  national: boolean;
+  logo: string;
+}
+
+export interface Player {
+  player: PlayerInfo;
+}
+
+export interface PlayerInfo {
+  id: number;
+  name: string;
+  firstname: string;
+  lastname: string;
+  age: number;
+  birth: {
+    date: string;
+    place: string;
     country: string;
-    founded: number;
-    national: boolean;
-    logo: string;
   };
-  venue: {
-    id: number;
-    name: string;
-    address: string;
-    city: string;
-    capacity: number;
-    surface: string;
-    image: string;
-  };
+  nationality: string;
+  height: string;
+  weight: string;
+  injured: boolean;
+  photo: string;
 }

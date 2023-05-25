@@ -6,7 +6,7 @@ import Club from './pages/club';
 
 function App() {
   return (
-    <div className="bg-orange-200 w-full h-screen">
+    <div className="bg-orange-200 w-full min-h-screen">
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />

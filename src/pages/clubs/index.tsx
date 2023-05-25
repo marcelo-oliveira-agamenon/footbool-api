@@ -35,12 +35,12 @@ export default function Clubs() {
     <div>
       <Header />
 
-      <section className="flex">
+      <section className="flex flex-wrap gap-3 p-2">
         {clubs && clubs.length !== 0 ? (
           clubs.map((club) => <Team {...club} />)
         ) : (
-          <div>
-            <h3>Não há clubes nesta temporada ou liga!</h3>
+          <div className="w-full text-center mt-12">
+            <h3 className="text-xl">Não há clubes nesta temporada ou liga!</h3>
           </div>
         )}
       </section>

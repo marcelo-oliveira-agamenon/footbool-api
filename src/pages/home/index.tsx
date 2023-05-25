@@ -88,7 +88,7 @@ export default function Home() {
 
         <button
           type="button"
-          disabled={selectedLeague.length !== 0 && selectedSeason.length !== 0}
+          disabled={selectedLeague === '' || selectedSeason === ''}
           onClick={handleSelectSeason}
         >
           Selecionar

@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
-import { Countries } from '../../interfaces/api';
+import { Country } from '../../interfaces/api';
+import Select from '../../components/select';
 
 type LoginStep = 'token' | 'country';
 
@@ -10,7 +11,7 @@ export default function Login() {
   const [loginStep, setLoginStep] = useState<LoginStep>('token');
   const [tokenKey, setTokenKey] = useState('');
   const [country, setCountry] = useState('');
-  const [listOfCountries, setListOfCountries] = useState<Countries[]>([]);
+  const [listOfCountries, setListOfCountries] = useState<Country[]>([]);
 
   const getCountriesAvaliable = useCallback(async () => {
     await api
@@ -70,25 +71,13 @@ export default function Login() {
         </div>
       ) : (
         <div className="flex flex-col place-content-center">
-          <label htmlFor="">Escolha o país:</label>
-
-          <select
-            name=""
-            id=""
-            onChange={(event) => setCountry(event.target.value)}
-          >
-            {listOfCountries &&
-              listOfCountries.map((country, index) => (
-                <option value={country.name} key={country.code + index}>
-                  <img
-                    src={`https://media.api-sports.io/flags/{${country.code}}.svg`}
-                    alt={country.name}
-                  />
-
-                  {country.name}
-                </option>
-              ))}
-          </select>
+          <Select
+            label="Escolha o país:"
+            data={listOfCountries}
+            onSelect={(data) => setCountry(data as string)}
+            keyName="name"
+            keyValue="code"
+          />
 
           <button type="button" onClick={handleCountrySelection}>
             Selecionar

@@ -5,12 +5,9 @@ import Header from '../../components/header';
 import { League } from '../../interfaces/api';
 import Select from '../../components/select';
 
-type HomeSteps = 'league' | 'season' | 'club';
-
 export default function Home() {
   const navigate = useNavigate();
   const [leagues, setLeagues] = useState<League[]>([]);
-  const [homeStep, setHomeStep] = useState<HomeSteps>('league');
   const [selectedLeague, setSelectedLeague] = useState('');
   const [selectedSeason, setSelectedSeason] = useState('');
 
@@ -21,13 +18,15 @@ export default function Home() {
       code: countryCode,
     });
 
-    // await api.get("/leagues/" + url.toString(), {
-    //   headers: {
-    //     'x-apisports-key': tokenKey,
-    //   },
-    // }).then(response => {
-    //   setLeagues(response.data.response)
-    // })
+    await api
+      .get('/leagues?' + url.toString(), {
+        headers: {
+          'x-apisports-key': tokenKey,
+        },
+      })
+      .then((response) => {
+        setLeagues(response.data.response);
+      });
   }, []);
 
   useEffect(() => {
@@ -45,15 +44,18 @@ export default function Home() {
       : [];
   }, [leagues]);
 
-  const returnSeasonFormat = useMemo(() => {
-    return leagues && leagues.length > 0
-      ? leagues.map((element) => {
+  const returnSeasonFormat = useCallback(() => {
+    const seasons = leagues.find(
+      (element) => element.league.id === Number(selectedLeague)
+    );
+    return seasons
+      ? seasons.seasons.map((season) => {
           return {
-            year: element.seasons,
+            year: season.year,
           };
         })
       : [];
-  }, [leagues]);
+  }, [leagues, selectedLeague]);
 
   const handleSelectSeason = () => {
     localStorage.setItem('league_code', selectedLeague);
@@ -65,43 +67,33 @@ export default function Home() {
     <div>
       <Header />
 
-      {homeStep === 'league' || homeStep === 'season' ? (
-        <section>
+      <section>
+        <Select
+          label="Selecione uma liga:"
+          data={returnLeagueSelectedFormat}
+          onSelect={(data) => setSelectedLeague(data.toString())}
+          keyName="name"
+          keyValue="id"
+        />
+
+        {selectedLeague.length !== 0 ? (
           <Select
-            label="Selecione uma liga:"
-            data={returnLeagueSelectedFormat}
-            onSelect={(data) => {
-              setSelectedLeague(data as string);
-              setHomeStep('season');
-            }}
-            keyName="name"
-            keyValue="id"
+            label="Selecione uma temporada:"
+            data={returnSeasonFormat()}
+            onSelect={(data) => setSelectedSeason(data.toString())}
+            keyName="year"
+            keyValue="year"
           />
+        ) : null}
 
-          {homeStep === 'season' ? (
-            <Select
-              label="Selecione uma temporada:"
-              data={returnSeasonFormat}
-              onSelect={(data) => {
-                setSelectedSeason(data.toString());
-                setHomeStep('club');
-              }}
-              keyName="name"
-              keyValue="id"
-            />
-          ) : null}
-
-          <button
-            type="button"
-            disabled={homeStep !== 'season'}
-            onClick={handleSelectSeason}
-          >
-            Selecionar
-          </button>
-        </section>
-      ) : (
-        <section>club</section>
-      )}
+        <button
+          type="button"
+          disabled={selectedLeague.length !== 0 && selectedSeason.length !== 0}
+          onClick={handleSelectSeason}
+        >
+          Selecionar
+        </button>
+      </section>
     </div>
   );
 }

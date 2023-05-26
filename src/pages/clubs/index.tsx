@@ -37,7 +37,9 @@ export default function Clubs() {
 
       <section className="flex flex-wrap gap-3 p-2">
         {clubs && clubs.length !== 0 ? (
-          clubs.map((club) => <Team {...club} />)
+          clubs.map((club, index) => (
+            <Team key={`${index}-${club.team.id}`} {...club} />
+          ))
         ) : (
           <div className="w-full text-center mt-12">
             <h3 className="text-xl">Não há clubes nesta temporada ou liga!</h3>

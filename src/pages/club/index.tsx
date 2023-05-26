@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { PieChart, Pie } from 'recharts';
+import { BarChart, XAxis, YAxis, Tooltip, Bar } from 'recharts';
 import api from '../../api';
 import Header from '../../components/header';
 import { Player as IPlayer, TeamStats } from '../../interfaces/api';
@@ -62,9 +62,11 @@ export default function Club() {
     const auxGoals = clubInfo ? Object.entries(clubInfo.goals.for.minute) : [];
 
     return auxGoals.map((goal) => {
+      const value = goal[1].total === null ? 0 : goal[1].total;
+
       return {
         name: goal[0],
-        value: goal[1].total,
+        value,
       };
     });
   }, [clubInfo]);
@@ -92,7 +94,7 @@ export default function Club() {
                   const { age, name, nationality, id } = player.player;
 
                   return (
-                    <tr key={id}>
+                    <tr key={`${id}-${age}`}>
                       <td>{name}</td>
 
                       <td>{age}</td>
@@ -120,8 +122,8 @@ export default function Club() {
 
             <tbody>
               {clubInfo ? (
-                clubInfo.lineups.map((form) => (
-                  <tr>
+                clubInfo.lineups.map((form, index) => (
+                  <tr key={`${index}-${form.formation}`}>
                     <td>{form.formation}</td>
 
                     <td>{form.played}</td>
@@ -171,17 +173,12 @@ export default function Club() {
         <section>
           <h3>Gols marcados por tempo de jogo</h3>
 
-          <PieChart width={400} height={400}>
-            <Pie
-              data={returnGraphFormat}
-              dataKey="value"
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              fill="#8884d8"
-              label
-            />
-          </PieChart>
+          <BarChart width={700} height={300} data={returnGraphFormat}>
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="value" fill="#8884d8" />
+          </BarChart>
         </section>
       </div>
     </div>

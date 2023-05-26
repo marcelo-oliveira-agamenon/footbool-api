@@ -79,3 +79,58 @@ export interface PlayerInfo {
   injured: boolean;
   photo: string;
 }
+
+export interface TeamStats {
+  league: Partial<
+    TeamData & {
+      flag: string;
+      season: number;
+    }
+  >;
+  team: Partial<TeamData>;
+  form: string;
+  fixtures: Fixtures;
+  goals: {
+    for: Goals;
+    against: Goals;
+  };
+  lineups: Array<Lineups>;
+}
+
+export interface Lineups {
+  formation: string;
+  played: number;
+}
+
+export interface HomeAway {
+  home: number;
+  away: number;
+  total: number;
+}
+
+export interface Fixtures {
+  played: HomeAway;
+  wins: HomeAway;
+  draws: HomeAway;
+  loses: HomeAway;
+}
+
+export interface Goals {
+  total: HomeAway;
+  average: HomeAway;
+  minute: {
+    '0-15': Minutes;
+    '16-30': Minutes;
+    '31-45': Minutes;
+    '46-60': Minutes;
+    '61-75': Minutes;
+    '76-90': Minutes;
+    '91-105': Minutes;
+    '106-120': Minutes;
+  };
+}
+
+export interface Minutes {
+  total: number | null;
+  percentage: string | null;
+}

@@ -4,6 +4,7 @@ import api from '../../api';
 import Header from '../../components/header';
 import { Player as IPlayer, TeamStats } from '../../interfaces/api';
 import { useParams } from 'react-router-dom';
+import Navigation from '../../components/navigation';
 
 export default function Club() {
   const { id } = useParams();
@@ -74,6 +75,20 @@ export default function Club() {
   return (
     <div>
       <Header />
+
+      <Navigation />
+
+      {clubInfo ? (
+        <section className="flex justify-between items-center">
+          <h1>{clubInfo.team.name}</h1>
+
+          <h3>{clubInfo.league.name}</h3>
+
+          <h5>{clubInfo.league.season}</h5>
+
+          <img src={clubInfo.team.logo} alt={clubInfo.team.name} />
+        </section>
+      ) : null}
 
       <div>
         <section>

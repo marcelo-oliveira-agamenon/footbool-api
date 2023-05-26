@@ -3,6 +3,7 @@ import api from '../../api';
 import Header from '../../components/header';
 import { Team as ITeam } from '../../interfaces/api';
 import Team from '../../components/team';
+import Navigation from '../../components/navigation';
 
 export default function Clubs() {
   const [clubs, setClubs] = useState<Array<ITeam>>([]);
@@ -36,6 +37,10 @@ export default function Clubs() {
       <Header />
 
       <section className="flex flex-wrap gap-3 p-2">
+        <Navigation />
+
+        <h1>Selecione o clube</h1>
+
         {clubs && clubs.length !== 0 ? (
           clubs.map((club, index) => (
             <Team key={`${index}-${club.team.id}`} {...club} />

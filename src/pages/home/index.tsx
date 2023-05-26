@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
 import Header from '../../components/header';
-import { League } from '../../interfaces/api';
+import { Country, League } from '../../interfaces/api';
 import Select from '../../components/select';
 
 export default function Home() {
@@ -10,12 +10,13 @@ export default function Home() {
   const [leagues, setLeagues] = useState<League[]>([]);
   const [selectedLeague, setSelectedLeague] = useState('');
   const [selectedSeason, setSelectedSeason] = useState('');
+  const [listOfCountries, setListOfCountries] = useState<Country[]>([]);
+  const [country, setCountry] = useState('');
+  const tokenKey = localStorage.getItem('token_key') as string;
 
   const getLeaguesByCountry = useCallback(async () => {
-    const countryCode = localStorage.getItem('country_code') as string;
-    const tokenKey = localStorage.getItem('token_key') as string;
     const url = new URLSearchParams({
-      code: countryCode,
+      code: country,
     });
 
     await api
@@ -27,11 +28,29 @@ export default function Home() {
       .then((response) => {
         setLeagues(response.data.response);
       });
-  }, []);
+  }, [tokenKey, country]);
+
+  const getCountriesAvaliable = useCallback(async () => {
+    await api
+      .get('/countries', {
+        headers: {
+          'x-apisports-key': tokenKey,
+        },
+      })
+      .then((response) => {
+        setListOfCountries(response.data.response);
+      });
+  }, [tokenKey]);
 
   useEffect(() => {
-    getLeaguesByCountry();
-  }, [getLeaguesByCountry]);
+    getCountriesAvaliable();
+  }, [getCountriesAvaliable]);
+
+  useEffect(() => {
+    if (listOfCountries.length !== 0) {
+      getLeaguesByCountry();
+    }
+  }, [getLeaguesByCountry, listOfCountries]);
 
   const returnLeagueSelectedFormat = useMemo(() => {
     return leagues && leagues.length > 0
@@ -58,6 +77,7 @@ export default function Home() {
   }, [leagues, selectedLeague]);
 
   const handleSelectSeason = () => {
+    localStorage.setItem('country_code', country);
     localStorage.setItem('league_code', selectedLeague);
     localStorage.setItem('season', selectedSeason);
     navigate('/club');
@@ -69,8 +89,20 @@ export default function Home() {
 
       <section>
         <Select
+          label="Escolha o país:"
+          isDisabled={listOfCountries.length === 0}
+          defaultText="Escolha o país"
+          data={listOfCountries}
+          onSelect={(data) => setCountry(data as string)}
+          keyName="name"
+          keyValue="code"
+        />
+
+        <Select
           label="Selecione uma liga:"
           data={returnLeagueSelectedFormat}
+          isDisabled={returnLeagueSelectedFormat.length === 0}
+          defaultText="Escolha a liga"
           onSelect={(data) => setSelectedLeague(data.toString())}
           keyName="name"
           keyValue="id"
@@ -79,6 +111,8 @@ export default function Home() {
         {selectedLeague.length !== 0 ? (
           <Select
             label="Selecione uma temporada:"
+            isDisabled={returnSeasonFormat().length === 0}
+            defaultText="Escolha a temporada"
             data={returnSeasonFormat()}
             onSelect={(data) => setSelectedSeason(data.toString())}
             keyName="year"

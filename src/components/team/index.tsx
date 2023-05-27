@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Team as ITeam } from '../../interfaces/api';
+import { Team as ITeam } from 'interfaces/api';
 
 export default function Team({ team }: ITeam) {
   const navigate = useNavigate();

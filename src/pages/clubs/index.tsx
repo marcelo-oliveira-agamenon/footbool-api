@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import api from '../../api';
-import Header from '../../components/header';
-import { Team as ITeam } from '../../interfaces/api';
-import Team from '../../components/team';
-import Navigation from '../../components/navigation';
+import api from 'api';
+import Header from 'components/header';
+import { Team as ITeam } from 'interfaces/api';
+import Team from 'components/team';
+import Navigation from 'components/navigation';
+import Teams from 'mock/teams.json';
 
 export default function Clubs() {
   const [clubs, setClubs] = useState<Array<ITeam>>([]);
@@ -17,15 +18,16 @@ export default function Clubs() {
       season,
     });
 
-    await api
-      .get('/teams?' + url.toString(), {
-        headers: {
-          'x-apisports-key': tokenKey,
-        },
-      })
-      .then((response) => {
-        setClubs(response.data.response);
-      });
+    // await api
+    //   .get('/teams?' + url.toString(), {
+    //     headers: {
+    //       'x-apisports-key': tokenKey,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setClubs(response.data.response);
+    //   });
+    setClubs(Teams as any);
   }, []);
 
   useEffect(() => {

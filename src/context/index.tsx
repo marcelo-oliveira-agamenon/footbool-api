@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { Context as ContextType } from '../interfaces/context';
+import { Context as ContextType } from 'interfaces/context';
 
 const defaultValue: ContextType = {
   country: 'Brazil',

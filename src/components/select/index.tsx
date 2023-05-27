@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface ISelect {
   label: string;
   data: Array<any>;

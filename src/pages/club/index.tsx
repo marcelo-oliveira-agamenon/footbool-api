@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BarChart, XAxis, YAxis, Tooltip, Bar } from 'recharts';
-import api from '../../api';
-import Header from '../../components/header';
-import { Player as IPlayer, TeamStats } from '../../interfaces/api';
+import api from 'api';
+import Header from 'components/header';
+import { Player as IPlayer, TeamStats } from 'interfaces/api';
 import { useParams } from 'react-router-dom';
-import Navigation from '../../components/navigation';
-import team from '../../mock/team.json';
-import player from '../../mock/player.json';
+import Navigation from 'components/navigation';
+import team from 'mock/team.json';
+import player from 'mock/player.json';
 
 export default function Club() {
   const { id } = useParams();

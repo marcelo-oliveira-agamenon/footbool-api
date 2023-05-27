@@ -4,10 +4,10 @@ import {
   Routes,
   Navigate,
 } from 'react-router-dom';
-import Login from './pages/login';
-import Home from './pages/home';
-import Clubs from './pages/clubs';
-import Club from './pages/club';
+import Login from 'pages/login';
+import Home from 'pages/home';
+import Clubs from 'pages/clubs';
+import Club from 'pages/club';
 
 interface IProtectedRoute {
   token: string;

@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api';
-import Header from '../../components/header';
-import { Country, League } from '../../interfaces/api';
-import Select from '../../components/select';
+import api from 'api';
+import Header from 'components/header';
+import { Country, League } from 'interfaces/api';
+import Select from 'components/select';
+import Countries from 'mock/countries.json';
+import Leagues from 'mock/leagues.json';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -19,27 +21,29 @@ export default function Home() {
       code: country,
     });
 
-    await api
-      .get('/leagues?' + url.toString(), {
-        headers: {
-          'x-apisports-key': tokenKey,
-        },
-      })
-      .then((response) => {
-        setLeagues(response.data.response);
-      });
+    // await api
+    //   .get('/leagues?' + url.toString(), {
+    //     headers: {
+    //       'x-apisports-key': tokenKey,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setLeagues(response.data.response);
+    //   });
+    setLeagues(Leagues as any);
   }, [tokenKey, country]);
 
   const getCountriesAvaliable = useCallback(async () => {
-    await api
-      .get('/countries', {
-        headers: {
-          'x-apisports-key': tokenKey,
-        },
-      })
-      .then((response) => {
-        setListOfCountries(response.data.response);
-      });
+    // await api
+    //   .get('/countries', {
+    //     headers: {
+    //       'x-apisports-key': tokenKey,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setListOfCountries(response.data.response);
+    //   });
+    setListOfCountries(Countries as any);
   }, [tokenKey]);
 
   useEffect(() => {

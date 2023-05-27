@@ -96,11 +96,11 @@ export default function Club() {
 
       {clubInfo ? (
         <section className="flex justify-between items-center py-2 px-5 bg-indigo-200 mx-2 rounded-lg my-8">
-          <h1>{clubInfo.team.name}</h1>
+          <h1 className="text-3xl font-bold">{clubInfo.team.name}</h1>
 
-          <h3>Liga: {clubInfo.league.name}</h3>
+          <h3 className="text-xl">Liga: {clubInfo.league.name}</h3>
 
-          <h5>Temporada: {clubInfo.league.season}</h5>
+          <h5 className="text-xl">Temporada: {clubInfo.league.season}</h5>
 
           <img src={clubInfo.team.logo} alt={clubInfo.team.name} />
         </section>
@@ -126,11 +126,11 @@ export default function Club() {
 
                   return (
                     <tr key={`${id}-${age}`}>
-                      <td>{name}</td>
+                      <td className="h-10 ">{name}</td>
 
-                      <td>{age}</td>
+                      <td className="h-10 text-center">{age}</td>
 
-                      <td>{nationality}</td>
+                      <td className="h-10 text-center">{nationality}</td>
                     </tr>
                   );
                 })
@@ -140,8 +140,9 @@ export default function Club() {
             </tbody>
           </table>
 
-          <div>
+          <div className="mt-6 flex justify-center gap-8">
             <button
+              className="text-sm"
               type="button"
               onClick={() => handleChangePage(false)}
               disabled={page === 1}
@@ -150,6 +151,7 @@ export default function Club() {
             </button>
 
             <button
+              className="text-sm"
               type="button"
               onClick={() => handleChangePage(true)}
               disabled={page === pageRange.current}
@@ -172,7 +174,10 @@ export default function Club() {
             <tbody>
               {clubInfo ? (
                 clubInfo.lineups.map((form, index) => (
-                  <tr key={`${index}-${form.formation}`}>
+                  <tr
+                    key={`${index}-${form.formation}`}
+                    className="h-10 text-center"
+                  >
                     <td>{form.formation}</td>
 
                     <td>{form.played}</td>
@@ -191,26 +196,34 @@ export default function Club() {
           <table>
             <thead>
               <tr>
-                <th>Total de jogos</th>
+                <th className="px-8">Total de jogos</th>
 
-                <th>Total de vitórias</th>
+                <th className="px-8">Total de vitórias</th>
 
-                <th>Total de derrotas</th>
+                <th className="px-8">Total de derrotas</th>
 
-                <th>Total de empates</th>
+                <th className="px-8">Total de empates</th>
               </tr>
             </thead>
 
             <tbody>
               {clubInfo ? (
                 <tr>
-                  <td>{clubInfo.fixtures.played.total}</td>
+                  <td className="h-12 text-center">
+                    {clubInfo.fixtures.played.total}
+                  </td>
 
-                  <td>{clubInfo.fixtures.wins.total}</td>
+                  <td className="h-12 text-center">
+                    {clubInfo.fixtures.wins.total}
+                  </td>
 
-                  <td>{clubInfo.fixtures.loses.total}</td>
+                  <td className="h-12 text-center">
+                    {clubInfo.fixtures.loses.total}
+                  </td>
 
-                  <td>{clubInfo.fixtures.draws.total}</td>
+                  <td className="h-12 text-center">
+                    {clubInfo.fixtures.draws.total}
+                  </td>
                 </tr>
               ) : (
                 <tr>Não há resultados disponíveis para este clube</tr>
@@ -219,8 +232,10 @@ export default function Club() {
           </table>
         </section>
 
-        <section className="mt-8">
-          <h3 className="mb-8">Gols marcados por tempo de jogo</h3>
+        <section className="mt-8 mb-10">
+          <h3 className="mb-8 text-center text-2xl">
+            Gols marcados por tempo de jogo
+          </h3>
 
           <BarChart width={700} height={300} data={returnGraphFormat}>
             <XAxis dataKey="name" />

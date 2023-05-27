@@ -33,7 +33,10 @@ export default function Select({
         </option>
         {data &&
           data.map((element, index) => (
-            <option value={element[keyValue]} key={element[keyValue] + index}>
+            <option
+              value={element[keyValue]}
+              key={`${element[keyValue]}/${index}`}
+            >
               {element[keyName]}
             </option>
           ))}

@@ -1,13 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BarChart, XAxis, YAxis, Tooltip, Bar } from 'recharts';
 import api from '../../api';
 import Header from '../../components/header';
 import { Player as IPlayer, TeamStats } from '../../interfaces/api';
 import { useParams } from 'react-router-dom';
 import Navigation from '../../components/navigation';
+import team from '../../mock/team.json';
+import player from '../../mock/player.json';
 
 export default function Club() {
   const { id } = useParams();
+  const pageRange = useRef(0);
   const [availablePlayers, setAvailablePlayers] = useState<Array<IPlayer>>([]);
   const [clubInfo, setClubInfo] = useState<TeamStats>();
   const [page, setPage] = useState(1);
@@ -22,33 +25,36 @@ export default function Club() {
       league,
     });
 
-    await api
-      .get('/teams/statistics?' + url.toString(), {
-        headers: {
-          'x-apisports-key': tokenKey,
-        },
-      })
-      .then((response) => {
-        setClubInfo(response.data.response);
-      });
+    // await api
+    //   .get('/teams/statistics?' + url.toString(), {
+    //     headers: {
+    //       'x-apisports-key': tokenKey,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setClubInfo(response.data.response);
+    //   });
+    setClubInfo(team as any);
   }, [league, season, id, tokenKey]);
 
   const getClubInfo = useCallback(async () => {
     const url = new URLSearchParams({
       team: id || '',
       season,
-      page: page.toString(), // check scroll to fetch another page
+      page: page.toString(),
     });
 
-    await api
-      .get('/players?' + url.toString(), {
-        headers: {
-          'x-apisports-key': tokenKey,
-        },
-      })
-      .then((response) => {
-        setAvailablePlayers(response.data.response);
-      });
+    // await api
+    //   .get('/players?' + url.toString(), {
+    //     headers: {
+    //       'x-apisports-key': tokenKey,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setAvailablePlayers(response.data.response);
+    //     pageRange.current = response.data.paging.total;
+    //   });
+    setAvailablePlayers(player as any);
   }, [page, id, tokenKey, season]);
 
   useEffect(() => {
@@ -72,6 +78,16 @@ export default function Club() {
     });
   }, [clubInfo]);
 
+  const handleChangePage = (isNext: boolean) => {
+    if (isNext && page < pageRange.current) {
+      setPage(page + 1);
+      return;
+    }
+    if (isNext === false && page > 0) {
+      setPage(page - 1);
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -79,20 +95,20 @@ export default function Club() {
       <Navigation />
 
       {clubInfo ? (
-        <section className="flex justify-between items-center">
+        <section className="flex justify-between items-center py-2 px-5 bg-indigo-200 mx-2 rounded-lg my-8">
           <h1>{clubInfo.team.name}</h1>
 
-          <h3>{clubInfo.league.name}</h3>
+          <h3>Liga: {clubInfo.league.name}</h3>
 
-          <h5>{clubInfo.league.season}</h5>
+          <h5>Temporada: {clubInfo.league.season}</h5>
 
           <img src={clubInfo.team.logo} alt={clubInfo.team.name} />
         </section>
       ) : null}
 
-      <div>
-        <section>
-          <table>
+      <div className="flex justify-between p-2">
+        <section className="w-3/5">
+          <table className="w-full">
             <thead>
               <tr>
                 <th>Name</th>
@@ -123,10 +139,28 @@ export default function Club() {
               )}
             </tbody>
           </table>
+
+          <div>
+            <button
+              type="button"
+              onClick={() => handleChangePage(false)}
+              disabled={page === 1}
+            >
+              Anterior
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleChangePage(true)}
+              disabled={page === pageRange.current}
+            >
+              Próxima
+            </button>
+          </div>
         </section>
 
-        <section>
-          <table>
+        <section className="w-2/5">
+          <table className="w-full">
             <thead>
               <tr>
                 <th>Formações</th>
@@ -152,8 +186,8 @@ export default function Club() {
         </section>
       </div>
 
-      <div>
-        <section>
+      <div className="p-2 mt-3">
+        <section className="w-full flex justify-center">
           <table>
             <thead>
               <tr>
@@ -185,8 +219,8 @@ export default function Club() {
           </table>
         </section>
 
-        <section>
-          <h3>Gols marcados por tempo de jogo</h3>
+        <section className="mt-8">
+          <h3 className="mb-8">Gols marcados por tempo de jogo</h3>
 
           <BarChart width={700} height={300} data={returnGraphFormat}>
             <XAxis dataKey="name" />

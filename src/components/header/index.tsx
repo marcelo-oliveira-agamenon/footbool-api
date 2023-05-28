@@ -7,6 +7,7 @@ export default function Header() {
     localStorage.removeItem('season');
     localStorage.removeItem('token_key');
     localStorage.removeItem('league_code');
+    localStorage.removeItem('country_code');
     navigate('/');
   };
 

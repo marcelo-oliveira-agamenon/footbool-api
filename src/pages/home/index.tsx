@@ -91,9 +91,9 @@ export default function Home() {
     <div>
       <Header />
 
-      <section>
+      <section className="flex flex-col justify-center items-center bg-red-400 mt-28 w-3/5 mx-auto rounded-xl px-3 py-5 shadow-lg">
         <Select
-          label="Escolha o país:"
+          label="Escolha o país"
           isDisabled={listOfCountries.length === 0}
           defaultText="Escolha o país"
           data={listOfCountries}
@@ -102,8 +102,10 @@ export default function Home() {
           keyValue="code"
         />
 
+        <div className="my-6" />
+
         <Select
-          label="Selecione uma liga:"
+          label="Selecione uma liga"
           data={returnLeagueSelectedFormat}
           isDisabled={returnLeagueSelectedFormat.length === 0}
           defaultText="Escolha a liga"
@@ -112,9 +114,11 @@ export default function Home() {
           keyValue="id"
         />
 
+        <div className="my-6" />
+
         {selectedLeague.length !== 0 ? (
           <Select
-            label="Selecione uma temporada:"
+            label="Selecione uma temporada"
             isDisabled={returnSeasonFormat().length === 0}
             defaultText="Escolha a temporada"
             data={returnSeasonFormat()}
@@ -125,6 +129,7 @@ export default function Home() {
         ) : null}
 
         <button
+          className="mt-10 bg-gray-100 cursor-pointer py-2 px-12 w-fit mx-auto rounded-md text-lg disabled:bg-gray-500 hover:shadow-lg hover:bg-gray-300 transition-all duration-500"
           type="button"
           disabled={selectedLeague === '' || selectedSeason === ''}
           onClick={handleSelectSeason}

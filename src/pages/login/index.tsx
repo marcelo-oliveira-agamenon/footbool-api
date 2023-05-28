@@ -27,7 +27,7 @@ export default function Login() {
             Bem vindo ao seu portal de dados sobre Futebol!
           </h1>
 
-          <p className="mt-8 text-center text-lg">
+          <p className="mt-8 text-center font-medium text-lg">
             Para começar, precisamos do seu token para acessar a plataforma
           </p>
         </div>
@@ -36,7 +36,7 @@ export default function Login() {
           onSubmit={handleSubmit}
           className="flex flex-col mt-20 bg-red-400 p-5 rounded-xl shadow-lg"
         >
-          <label className="text-xl" htmlFor="token_key">
+          <label className="text-xl text-center" htmlFor="token_key">
             Insira aqui seu token
           </label>
 
@@ -51,7 +51,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="mt-8 bg-gray-100 py-2 px-12 w-fit mx-auto rounded-md text-lg hover:shadow-lg hover:bg-gray-300 transition-all duration-500"
+            className="mt-8 bg-gray-100 py-2 px-12 w-fit mx-auto rounded-md text-lg disabled:bg-gray-500 hover:shadow-lg hover:bg-gray-300 transition-all duration-500"
             disabled={!tokenKey || tokenKey.length === 0}
           >
             Cadastrar

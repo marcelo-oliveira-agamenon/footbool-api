@@ -3,11 +3,13 @@ import {
   Route,
   Routes,
   Navigate,
+  useLocation,
 } from 'react-router-dom';
 import Login from 'pages/login';
 import Home from 'pages/home';
 import Clubs from 'pages/clubs';
 import Club from 'pages/club';
+import { useEffect } from 'react';
 
 interface IProtectedRoute {
   token: string;
@@ -15,6 +17,12 @@ interface IProtectedRoute {
 }
 
 const ProtectedRoute = ({ token, children }: IProtectedRoute) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log('aaa ', location);
+  }, [location]);
+
   if (!token) {
     return <Navigate to="/" replace />;
   }

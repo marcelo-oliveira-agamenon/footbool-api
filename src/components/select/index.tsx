@@ -19,9 +19,12 @@ export default function Select({
 }: ISelect) {
   return (
     <>
-      <label htmlFor={label}>{label}</label>
+      <label htmlFor={label} className="text-xl">
+        {label}
+      </label>
 
       <select
+        className="w-full mt-3 py-1 px-2 rounded-md outline-none focus:shadow-lg transition-all duration-500"
         onChange={(event) => onSelect(event.target.value)}
         defaultValue={''}
         disabled={isDisabled}

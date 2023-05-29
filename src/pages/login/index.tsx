@@ -1,18 +1,39 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { context } from 'context';
 import Logo from 'assets/football-illustration-file-sports-design-logo-free-png.webp';
+import api from 'api';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { setShowLoader } = useContext(context);
   const [tokenKey, setTokenKey] = useState('');
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (tokenKey && tokenKey.length !== 0) {
-      // save token key on state
-      localStorage.setItem('token_key', tokenKey);
-      navigate('/home');
+      setShowLoader(true);
+
+      await api
+        .get('/status', {
+          headers: {
+            'x-apisports-key': tokenKey,
+          },
+        })
+        .then((response) => {
+          if (response.data.response.subscription.active) {
+            localStorage.setItem('token_key', tokenKey);
+            navigate('/home');
+          }
+        })
+        .catch(() => {
+          alert('Token inválido');
+        })
+        .finally(() => {
+          setShowLoader(false);
+        });
+
       return;
     }
   };

@@ -13,8 +13,6 @@ import Header from 'components/header';
 import { Player as IPlayer, TeamStats } from 'interfaces/api';
 import { useParams } from 'react-router-dom';
 import Navigation from 'components/navigation';
-import team from 'mock/team.json';
-import player from 'mock/player.json';
 
 export default function Club() {
   const { id } = useParams();
@@ -35,18 +33,17 @@ export default function Club() {
       league,
     });
 
-    // await api
-    //   .get('/teams/statistics?' + url.toString(), {
-    //     headers: {
-    //       'x-apisports-key': tokenKey,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setClubInfo(response.data.response);
-    //   });
-    setClubInfo(team as any);
-    setShowLoader(false);
-  }, [league, season, id, tokenKey]);
+    await api
+      .get('/teams/statistics?' + url.toString(), {
+        headers: {
+          'x-apisports-key': tokenKey,
+        },
+      })
+      .then((response) => {
+        setClubInfo(response.data.response);
+        setShowLoader(false);
+      });
+  }, [league, season, id, tokenKey, setShowLoader]);
 
   const getClubInfo = useCallback(async () => {
     const url = new URLSearchParams({
@@ -55,17 +52,16 @@ export default function Club() {
       page: page.toString(),
     });
 
-    // await api
-    //   .get('/players?' + url.toString(), {
-    //     headers: {
-    //       'x-apisports-key': tokenKey,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setAvailablePlayers(response.data.response);
-    //     pageRange.current = response.data.paging.total;
-    //   });
-    setAvailablePlayers(player as any);
+    await api
+      .get('/players?' + url.toString(), {
+        headers: {
+          'x-apisports-key': tokenKey,
+        },
+      })
+      .then((response) => {
+        setAvailablePlayers(response.data.response);
+        pageRange.current = response.data.paging.total;
+      });
   }, [page, id, tokenKey, season]);
 
   useEffect(() => {
@@ -117,10 +113,10 @@ export default function Club() {
         </section>
       ) : null}
 
-      <div className="flex justify-between p-2">
+      <div className="flex justify-between p-2 gap-2">
         <section className="w-3/5">
           <table className="w-full">
-            <thead>
+            <thead className="bg-blue-200 h-8">
               <tr>
                 <th>Name</th>
 
@@ -130,14 +126,14 @@ export default function Club() {
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="bg-gray-100">
               {availablePlayers && availablePlayers.length !== 0 ? (
                 availablePlayers.map((player) => {
                   const { age, name, nationality, id } = player.player;
 
                   return (
                     <tr key={`${id}-${age}`}>
-                      <td className="h-10 ">{name}</td>
+                      <td className="h-10 pl-2">{name}</td>
 
                       <td className="h-10 text-center">{age}</td>
 
@@ -153,7 +149,7 @@ export default function Club() {
 
           <div className="mt-6 flex justify-center gap-8">
             <button
-              className="text-sm"
+              className="text-sm bg-red-400 shadow-lg rounded-xl px-4 py-1 text-white font-medium hover:text-black disabled:opacity-60 transition-all"
               type="button"
               onClick={() => handleChangePage(false)}
               disabled={page === 1}
@@ -162,7 +158,7 @@ export default function Club() {
             </button>
 
             <button
-              className="text-sm"
+              className="text-sm bg-red-400 shadow-lg rounded-xl px-4 py-1 text-white font-medium hover:text-black disabled:opacity-60 transition-all"
               type="button"
               onClick={() => handleChangePage(true)}
               disabled={page === pageRange.current}
@@ -174,7 +170,7 @@ export default function Club() {
 
         <section className="w-2/5">
           <table className="w-full">
-            <thead>
+            <thead className="bg-blue-200 h-8">
               <tr>
                 <th>Formações</th>
 
@@ -182,7 +178,7 @@ export default function Club() {
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="bg-gray-100">
               {clubInfo ? (
                 clubInfo.lineups.map((form, index) => (
                   <tr
@@ -203,9 +199,9 @@ export default function Club() {
       </div>
 
       <div className="p-2 mt-3">
-        <section className="w-full flex justify-center">
+        <section className="w-full py-6 flex justify-center bg-red-400 shadow-lg rounded-xl">
           <table>
-            <thead>
+            <thead className="bg-blue-200 h-8">
               <tr>
                 <th className="px-8">Total de jogos</th>
 
@@ -217,22 +213,22 @@ export default function Club() {
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="bg-gray-100">
               {clubInfo ? (
                 <tr>
-                  <td className="h-12 text-center">
+                  <td className="h-10 text-center">
                     {clubInfo.fixtures.played.total}
                   </td>
 
-                  <td className="h-12 text-center">
+                  <td className="h-10 text-center">
                     {clubInfo.fixtures.wins.total}
                   </td>
 
-                  <td className="h-12 text-center">
+                  <td className="h-10 text-center">
                     {clubInfo.fixtures.loses.total}
                   </td>
 
-                  <td className="h-12 text-center">
+                  <td className="h-10 text-center">
                     {clubInfo.fixtures.draws.total}
                   </td>
                 </tr>
@@ -243,17 +239,19 @@ export default function Club() {
           </table>
         </section>
 
-        <section className="mt-8 mb-10">
+        <section className="flex flex-col mt-8 mb-10 bg-red-400 shadow-lg rounded-xl py-5">
           <h3 className="mb-8 text-center text-2xl">
             Gols marcados por tempo de jogo
           </h3>
 
-          <BarChart width={700} height={300} data={returnGraphFormat}>
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="value" fill="#8884d8" />
-          </BarChart>
+          <div className="mx-auto bg-slate-100">
+            <BarChart width={700} height={300} data={returnGraphFormat}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="value" fill="#8884d8" />
+            </BarChart>
+          </div>
         </section>
       </div>
     </div>

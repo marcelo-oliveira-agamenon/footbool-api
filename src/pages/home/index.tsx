@@ -5,8 +5,6 @@ import { context } from 'context';
 import Header from 'components/header';
 import { Country, League } from 'interfaces/api';
 import Select from 'components/select';
-import Countries from 'mock/countries.json';
-import Leagues from 'mock/leagues.json';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -24,34 +22,32 @@ export default function Home() {
       code: country,
     });
 
-    // await api
-    //   .get('/leagues?' + url.toString(), {
-    //     headers: {
-    //       'x-apisports-key': tokenKey,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setLeagues(response.data.response);
-    //   });
-    setLeagues(Leagues as any);
-    setShowLoader(false);
-  }, [tokenKey, country]);
+    await api
+      .get('/leagues?' + url.toString(), {
+        headers: {
+          'x-apisports-key': tokenKey,
+        },
+      })
+      .then((response) => {
+        setLeagues(response.data.response);
+        setShowLoader(false);
+      });
+  }, [tokenKey, country, setShowLoader]);
 
   const getCountriesAvaliable = useCallback(async () => {
     setShowLoader(true);
 
-    // await api
-    //   .get('/countries', {
-    //     headers: {
-    //       'x-apisports-key': tokenKey,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setListOfCountries(response.data.response);
-    //   });
-    setListOfCountries(Countries as any);
-    setShowLoader(false);
-  }, [tokenKey]);
+    await api
+      .get('/countries', {
+        headers: {
+          'x-apisports-key': tokenKey,
+        },
+      })
+      .then((response) => {
+        setListOfCountries(response.data.response);
+        setShowLoader(false);
+      });
+  }, [tokenKey, setShowLoader]);
 
   useEffect(() => {
     getCountriesAvaliable();

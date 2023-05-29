@@ -1,4 +1,4 @@
-import Ball from 'assets/800px-Soccerball.svg.png';
+import Ball from 'assets/800px-Soccerball.png';
 
 export default function Loader() {
   return (

@@ -5,7 +5,6 @@ import Header from 'components/header';
 import { Team as ITeam } from 'interfaces/api';
 import Team from 'components/team';
 import Navigation from 'components/navigation';
-import Teams from 'mock/teams.json';
 
 export default function Clubs() {
   const { setShowLoader } = useContext(context);
@@ -21,18 +20,17 @@ export default function Clubs() {
       season,
     });
 
-    // await api
-    //   .get('/teams?' + url.toString(), {
-    //     headers: {
-    //       'x-apisports-key': tokenKey,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setClubs(response.data.response);
-    //   });
-    setShowLoader(false);
-    setClubs(Teams as any);
-  }, []);
+    await api
+      .get('/teams?' + url.toString(), {
+        headers: {
+          'x-apisports-key': tokenKey,
+        },
+      })
+      .then((response) => {
+        setClubs(response.data.response);
+        setShowLoader(false);
+      });
+  }, [setShowLoader]);
 
   useEffect(() => {
     getClubs();

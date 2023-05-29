@@ -1,4 +1,6 @@
+import { Dispatch, SetStateAction } from 'react';
+
 export interface Context {
-  tokenApi: string;
-  country: string;
+  showLoader: boolean;
+  setShowLoader: Dispatch<SetStateAction<boolean>>;
 }

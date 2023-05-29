@@ -7,7 +7,7 @@ export default function Team({ team }: ITeam) {
   return (
     <div
       onClick={() => navigate(`/club/${team.id}`)}
-      className="flex bg-indigo-200 justify-between items-center p-2 cursor-pointer w-56 h-28"
+      className="flex bg-indigo-200 justify-between items-center p-2 cursor-pointer w-56 h-28 shadow-xl"
     >
       <h2 className="text-xl">{team.name}</h2>
 

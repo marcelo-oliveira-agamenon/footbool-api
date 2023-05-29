@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from 'api';
+import { context } from 'context';
 import Header from 'components/header';
 import { Country, League } from 'interfaces/api';
 import Select from 'components/select';
@@ -9,6 +10,7 @@ import Leagues from 'mock/leagues.json';
 
 export default function Home() {
   const navigate = useNavigate();
+  const { setShowLoader } = useContext(context);
   const [leagues, setLeagues] = useState<League[]>([]);
   const [selectedLeague, setSelectedLeague] = useState('');
   const [selectedSeason, setSelectedSeason] = useState('');
@@ -17,6 +19,7 @@ export default function Home() {
   const tokenKey = localStorage.getItem('token_key') as string;
 
   const getLeaguesByCountry = useCallback(async () => {
+    setShowLoader(true);
     const url = new URLSearchParams({
       code: country,
     });
@@ -31,9 +34,12 @@ export default function Home() {
     //     setLeagues(response.data.response);
     //   });
     setLeagues(Leagues as any);
+    setShowLoader(false);
   }, [tokenKey, country]);
 
   const getCountriesAvaliable = useCallback(async () => {
+    setShowLoader(true);
+
     // await api
     //   .get('/countries', {
     //     headers: {
@@ -44,6 +50,7 @@ export default function Home() {
     //     setListOfCountries(response.data.response);
     //   });
     setListOfCountries(Countries as any);
+    setShowLoader(false);
   }, [tokenKey]);
 
   useEffect(() => {

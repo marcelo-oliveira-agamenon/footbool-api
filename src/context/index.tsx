@@ -2,9 +2,9 @@ import { createContext } from 'react';
 import { Context as ContextType } from 'interfaces/context';
 
 const defaultValue: ContextType = {
-  country: 'Brazil',
-  tokenApi: '',
+  showLoader: false,
+  setShowLoader: () => {},
 };
-const Context = createContext(defaultValue);
+const context = createContext(defaultValue);
 
-export default Context;
+export { context };

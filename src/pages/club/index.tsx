@@ -1,6 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useContext,
+} from 'react';
 import { BarChart, XAxis, YAxis, Tooltip, Bar } from 'recharts';
 import api from 'api';
+import { context } from 'context';
 import Header from 'components/header';
 import { Player as IPlayer, TeamStats } from 'interfaces/api';
 import { useParams } from 'react-router-dom';
@@ -11,6 +19,7 @@ import player from 'mock/player.json';
 export default function Club() {
   const { id } = useParams();
   const pageRange = useRef(0);
+  const { setShowLoader } = useContext(context);
   const [availablePlayers, setAvailablePlayers] = useState<Array<IPlayer>>([]);
   const [clubInfo, setClubInfo] = useState<TeamStats>();
   const [page, setPage] = useState(1);
@@ -19,6 +28,7 @@ export default function Club() {
   const league = localStorage.getItem('league_code') as string;
 
   const getClubStats = useCallback(async () => {
+    setShowLoader(true);
     const url = new URLSearchParams({
       team: id || '',
       season,
@@ -35,6 +45,7 @@ export default function Club() {
     //     setClubInfo(response.data.response);
     //   });
     setClubInfo(team as any);
+    setShowLoader(false);
   }, [league, season, id, tokenKey]);
 
   const getClubInfo = useCallback(async () => {

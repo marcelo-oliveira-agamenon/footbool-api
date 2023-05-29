@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useContext } from 'react';
 import api from 'api';
+import { context } from 'context';
 import Header from 'components/header';
 import { Team as ITeam } from 'interfaces/api';
 import Team from 'components/team';
@@ -7,9 +8,11 @@ import Navigation from 'components/navigation';
 import Teams from 'mock/teams.json';
 
 export default function Clubs() {
+  const { setShowLoader } = useContext(context);
   const [clubs, setClubs] = useState<Array<ITeam>>([]);
 
   const getClubs = useCallback(async () => {
+    setShowLoader(true);
     const league = localStorage.getItem('league_code') as string;
     const season = localStorage.getItem('season') as string;
     const tokenKey = localStorage.getItem('token_key') as string;
@@ -27,6 +30,7 @@ export default function Clubs() {
     //   .then((response) => {
     //     setClubs(response.data.response);
     //   });
+    setShowLoader(false);
     setClubs(Teams as any);
   }, []);
 
@@ -38,11 +42,11 @@ export default function Clubs() {
     <div>
       <Header />
 
+      <Navigation />
+
+      <h1 className="my-5 px-2 text-2xl text-center">Selecione o clube</h1>
+
       <section className="flex flex-wrap gap-3 p-2">
-        <Navigation />
-
-        <h1>Selecione o clube</h1>
-
         {clubs && clubs.length !== 0 ? (
           clubs.map((club, index) => (
             <Team key={`${index}-${club.team.id}`} {...club} />

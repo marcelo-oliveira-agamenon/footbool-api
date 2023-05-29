@@ -55,7 +55,7 @@ export default function Login() {
 
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col mt-20 bg-red-400 p-5 rounded-xl shadow-lg"
+          className="flex flex-col my-20 bg-red-400 p-5 rounded-xl shadow-lg"
         >
           <label className="text-xl text-center" htmlFor="token_key">
             Insira aqui seu token

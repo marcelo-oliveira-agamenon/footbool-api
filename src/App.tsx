@@ -21,9 +21,7 @@ interface IProtectedRoute {
 const ProtectedRoute = ({ token, children }: IProtectedRoute) => {
   const location = useLocation();
 
-  useEffect(() => {
-    console.log('aaa ', location);
-  }, [location]);
+  useEffect(() => {}, [location]);
 
   if (!token) {
     return <Navigate to="/" replace />;

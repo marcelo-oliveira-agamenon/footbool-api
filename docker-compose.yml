@@ -1,0 +1,11 @@
+version: '3'
+services:
+  football_app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    environment:
+      - PORT=${APP_PORT}
+    network_mode: bridge
